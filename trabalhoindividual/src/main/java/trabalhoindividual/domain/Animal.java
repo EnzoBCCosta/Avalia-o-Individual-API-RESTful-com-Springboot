@@ -4,6 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import trabalhoindividual.repository.InteresseAdocao;
 
 @Entity
 public class Animal{
@@ -21,14 +30,20 @@ public class Animal{
     private String status; 
     private Integer idade;
 
-    public Animal(String nome, String especie, Integer idade) {
-        this.nome = nome;
-        this.especie = especie;
-        this.idade = idade;
-        this.status = status;
-        this.porte = porte;
-        this.sexo = sexo;
-        this.raca = raca;
+    @ManyToMany
+        @JoinTable(
+            name = "animal_caracteristica",
+            joinColumns = @JoinColumn(name = "animal_id"),
+            inverseJoinColumns = @JoinColumn(name = "caracteristica_id")
+        )
+    @JsonManagedReference
+    private List<Caracteristica> caracteristicas;
+
+    @OneToMany(mappedBy = "animal")
+    @JsonManagedReference
+    private List<InteresseAdocao> interessesAdocao;
+
+    public Animal() {   
     }
 
     public String getNome() {
