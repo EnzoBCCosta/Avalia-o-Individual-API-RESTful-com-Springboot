@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import trabalhoindividual.domain.Animal;
 import trabalhoindividual.repository.AnimalRepository;
+import trabalhoindividual.exception.ResourceNotFoundException;
 
 @Service
 public class AnimalService {
@@ -21,7 +22,7 @@ public class AnimalService {
     }
 
     public Animal getAnimalById(Long id) {
-        return animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+        return animalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
     }
 
     public Animal createAnimal(Animal animal) {
