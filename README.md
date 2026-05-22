@@ -216,4 +216,4 @@ Todos os erros são tratados globalmente pelo `GlobalExceptionHandler` e retorna
 | 409 | Conflito de dados (duplicidade) |
 | 500 | Erro interno do servidor |
 
---> muitos commits feito durante a madrugada pois o código simplesmente começou a explodir, mas finalmente esta pronto com muito desespero 
+--> muitos commits feito durante a madrugada pois o código simplesmente começou a explodir, mas finalmente esta pronto com muito desespero!
