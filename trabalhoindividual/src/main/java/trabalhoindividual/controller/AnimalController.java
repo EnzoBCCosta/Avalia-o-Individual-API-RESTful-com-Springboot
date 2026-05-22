@@ -5,14 +5,12 @@ import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import trabalhoindividual.domain.Animal;
 import trabalhoindividual.dto.request.AnimalRequest;
@@ -22,6 +20,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/animais")
+@Tag(name = "Animais", description = "Gerenciamento de animais disponíveis para adoção")
 public class AnimalController {
 
     private final AnimalService animalService;
@@ -42,7 +41,7 @@ public class AnimalController {
         return animal;
     }
 
-    private AnimalResponse AnimalResponse(Animal animal) {
+    private AnimalResponse toAnimalResponse(Animal animal) {
         AnimalResponse response = new AnimalResponse();
         response.setId(animal.getId());
         response.setNome(animal.getNome());
@@ -55,35 +54,58 @@ public class AnimalController {
         return response;
     }
 
+    @Operation(summary = "Listar todos os animais", description = "Retorna uma lista com todos os animais cadastrados")
     @GetMapping
     public ResponseEntity<List<AnimalResponse>> getAllAnimais() {
         List<Animal> animais = animalService.getAllAnimais();
         List<AnimalResponse> responses = animais.stream()
-                .map(this::AnimalResponse)
+                .map(this::toAnimalResponse)
                 .collect(Collectors.toList());
         return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
+    @Operation(summary = "Buscar animal por ID")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Animal encontrado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Animal não encontrado")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<AnimalResponse> getAnimalById(@PathVariable Long id) {
         Animal animal = animalService.getAnimalById(id);
-        return new ResponseEntity<>(AnimalResponse(animal), HttpStatus.OK);
+        return new ResponseEntity<>(toAnimalResponse(animal), HttpStatus.OK);
     }
 
+    @Operation(summary = "Cadastrar novo animal", description = "Cria um novo animal no sistema")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Animal cadastrado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
     public ResponseEntity<AnimalResponse> createAnimal(@Valid @RequestBody AnimalRequest request) {
         Animal animal = toAnimal(request);
         Animal createdAnimal = animalService.createAnimal(animal);
-        return new ResponseEntity<>(AnimalResponse(createdAnimal), HttpStatus.CREATED);
+        return new ResponseEntity<>(toAnimalResponse(createdAnimal), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Atualizar animal")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Animal atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos"),
+            @ApiResponse(responseCode = "404", description = "Animal não encontrado")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<AnimalResponse> updateAnimal(@PathVariable Long id, @Valid @RequestBody AnimalRequest request) {
+    public ResponseEntity<AnimalResponse> updateAnimal(@PathVariable Long id,
+            @Valid @RequestBody AnimalRequest request) {
         Animal animal = toAnimal(request);
         Animal updatedAnimal = animalService.updateAnimal(id, animal);
-        return new ResponseEntity<>(AnimalResponse(updatedAnimal), HttpStatus.OK);
+        return new ResponseEntity<>(toAnimalResponse(updatedAnimal), HttpStatus.OK);
     }
 
+    @Operation(summary = "Deletar animal")
+    @ApiResponses({
+            @ApiResponse(responseCode = "204", description = "Animal deletado com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Animal não encontrado")
+    })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAnimal(@PathVariable Long id) {
         animalService.deleteAnimal(id);

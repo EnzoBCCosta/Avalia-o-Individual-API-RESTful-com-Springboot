@@ -1,40 +1,57 @@
 package trabalhoindividual.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 @Entity
+@Schema(description = "Entidade que representa um animal disponível para adoção")
 public class Animal {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID único do animal", example = "1")
     private Long id;
 
+    @Schema(description = "Nome do animal", example = "Rex")
     private String nome;
+
+    @Schema(description = "Espécie do animal", example = "Cachorro")
     private String especie;
+
+    @Schema(description = "Raça do animal", example = "Labrador")
     private String raca;
+
+    @Schema(description = "Porte do animal", example = "Grande")
     private String porte;
+
+    @Schema(description = "Sexo do animal", example = "Macho")
     private String sexo;
+
+    @Schema(description = "Status de adoção do animal", example = "Disponível")
     private String status;
+
+    @Schema(description = "Idade do animal em anos", example = "3")
     private Integer idade;
 
+    // ManyToMany com Caracteristica: @JsonIgnoreProperties evita loop
+    // Animal serializa caracteristicas, mas dentro de cada Caracteristica
+    // o campo "animais" é ignorado
     @ManyToMany
     @JoinTable(name = "animal_caracteristica", joinColumns = @JoinColumn(name = "animal_id"), inverseJoinColumns = @JoinColumn(name = "caracteristica_id"))
     @JsonIgnoreProperties("animais")
+    @Schema(description = "Lista de características associadas ao animal")
     private List<Caracteristica> caracteristicas;
 
+    // OneToMany com InteresseAdocao: Animal é o lado "pai" (Managed)
+    // InteresseAdocao.animal é o lado "filho" (Back) — evita JSON infinito
     @OneToMany(mappedBy = "animal")
     @JsonManagedReference("animal-interesse")
+    @Schema(description = "Lista de interesses de adoção registrados para este animal")
     private List<InteresseAdocao> interessesAdocao;
 
     public Animal() {
@@ -96,11 +113,11 @@ public class Animal {
         this.status = status;
     }
 
-    public int getIdade() {
+    public Integer getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
+    public void setIdade(Integer idade) {
         this.idade = idade;
     }
 
@@ -119,5 +136,4 @@ public class Animal {
     public void setInteressesAdocao(List<InteresseAdocao> interessesAdocao) {
         this.interessesAdocao = interessesAdocao;
     }
-
 }
