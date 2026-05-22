@@ -1,7 +1,5 @@
 # 🐾 ONG Adoção — API REST — SERRATEC
-
-API RESTful para gerenciamento de adoção de animais, desenvolvida com Spring Boot. 
-
+## Aluno:Enzo Bernardo Carneiro da Costa
 ---
 
 ## 🛠️ Tecnologias Utilizadas
