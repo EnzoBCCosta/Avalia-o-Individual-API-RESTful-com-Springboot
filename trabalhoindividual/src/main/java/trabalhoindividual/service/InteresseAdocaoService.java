@@ -66,6 +66,9 @@ public class InteresseAdocaoService {
     }
 
     public List<InteresseAdocaoResponse> buscarPorAnimal(Long animalId) {
+        if (!animalRepository.existsById(animalId)) {
+            throw new ResourceNotFoundException("Animal não encontrado: " + animalId);
+        }
         return interesseAdocaoRepository.findByAnimalId(animalId)
                 .stream()
                 .map(this::toResponse)

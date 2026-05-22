@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import trabalhoindividual.domain.Animal;
 import trabalhoindividual.dto.request.AnimalRequest;
+import trabalhoindividual.dto.response.AnimalResponse;
 import trabalhoindividual.service.AnimalService;
 import jakarta.validation.Valid;
 
@@ -29,43 +30,58 @@ public class AnimalController {
         this.animalService = animalService;
     }
 
-    private AnimalRequest toRequest(Animal animal) {
-        AnimalRequest request = new AnimalRequest();
-        request.setNome(animal.getNome());
-        request.setEspecie(animal.getEspecie());
-        request.setIdade(animal.getIdade());
-        request.setRaca(animal.getRaca());
-        request.setSexo(animal.getSexo());
-        request.setPorte(animal.getPorte());
-        request.setStatus(animal.getStatus());
-        return request;
+    private Animal toAnimal(AnimalRequest request) {
+        Animal animal = new Animal();
+        animal.setNome(request.getNome());
+        animal.setEspecie(request.getEspecie());
+        animal.setIdade(request.getIdade());
+        animal.setRaca(request.getRaca());
+        animal.setSexo(request.getSexo());
+        animal.setPorte(request.getPorte());
+        animal.setStatus(request.getStatus());
+        return animal;
+    }
+
+    private AnimalResponse AnimalResponse(Animal animal) {
+        AnimalResponse response = new AnimalResponse();
+        response.setId(animal.getId());
+        response.setNome(animal.getNome());
+        response.setEspecie(animal.getEspecie());
+        response.setIdade(animal.getIdade());
+        response.setRaca(animal.getRaca());
+        response.setSexo(animal.getSexo());
+        response.setPorte(animal.getPorte());
+        response.setStatus(animal.getStatus());
+        return response;
     }
 
     @GetMapping
-    public ResponseEntity<List<AnimalRequest>> getAllAnimais() {
+    public ResponseEntity<List<AnimalResponse>> getAllAnimais() {
         List<Animal> animais = animalService.getAllAnimais();
-        List<AnimalRequest> requests = animais.stream()
-                .map(this::toRequest)
+        List<AnimalResponse> responses = animais.stream()
+                .map(this::AnimalResponse)
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(requests, HttpStatus.OK);
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AnimalRequest> getAnimalById(@PathVariable Long id) {
+    public ResponseEntity<AnimalResponse> getAnimalById(@PathVariable Long id) {
         Animal animal = animalService.getAnimalById(id);
-        return new ResponseEntity<>(toRequest(animal), HttpStatus.OK);
+        return new ResponseEntity<>(AnimalResponse(animal), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<AnimalRequest> createAnimal(@Valid @RequestBody Animal animal) {
+    public ResponseEntity<AnimalResponse> createAnimal(@Valid @RequestBody AnimalRequest request) {
+        Animal animal = toAnimal(request);
         Animal createdAnimal = animalService.createAnimal(animal);
-        return new ResponseEntity<>(toRequest(createdAnimal), HttpStatus.CREATED);
+        return new ResponseEntity<>(AnimalResponse(createdAnimal), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AnimalRequest> updateAnimal(@PathVariable Long id, @Valid @RequestBody Animal animal) {
+    public ResponseEntity<AnimalResponse> updateAnimal(@PathVariable Long id, @Valid @RequestBody AnimalRequest request) {
+        Animal animal = toAnimal(request);
         Animal updatedAnimal = animalService.updateAnimal(id, animal);
-        return new ResponseEntity<>(toRequest(updatedAnimal), HttpStatus.OK);
+        return new ResponseEntity<>(AnimalResponse(updatedAnimal), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -21,9 +21,9 @@ public class GlobalExceptionHandler {
         erro.put("erro", "Recurso não encontrado");
         erro.put("mensagem", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
-    }   
+    }
 
-     @ExceptionHandler(DuplicateEntryException.class)
+    @ExceptionHandler(DuplicateEntryException.class)
     public ResponseEntity<Map<String, Object>> handleDuplicateEntry(DuplicateEntryException ex) {
         Map<String, Object> erro = new HashMap<>();
         erro.put("timestamp", LocalDateTime.now());
@@ -46,5 +46,15 @@ public class GlobalExceptionHandler {
         erro.put("erro", "Dados inválidos");
         erro.put("campos", campos);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleGeneric(Exception ex) {
+        Map<String, Object> erro = new HashMap<>();
+        erro.put("timestamp", LocalDateTime.now());
+        erro.put("status", 500);
+        erro.put("erro", "Erro interno do servidor");
+        erro.put("mensagem", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erro);
     }
 }

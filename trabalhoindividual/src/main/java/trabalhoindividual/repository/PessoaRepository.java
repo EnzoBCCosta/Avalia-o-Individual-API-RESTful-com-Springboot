@@ -11,7 +11,7 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
 //verificar se existe cpf ou email igual para outra pessoa
 
-    Optional<Pessoa> findByCpf(String cpf, Long id);
-    Optional<Pessoa> findByEmail(String email, Long id);
+    Optional<Pessoa> findByCpf(String cpf);
+    Optional<Pessoa> findByEmail(String email);
 
 }

@@ -46,10 +46,11 @@ public class AnimalService {
         return animalRepository.save(existingAnimal);
     }
 
+    // verificar se o animal existe, deletar os interesses de adoção relacionados e depois deletar o animal 
     @Transactional
     public void deleteAnimal(Long id) {
+        getAnimalById(id);
         interesseAdocaoRepository.deleteByAnimalId(id);
-
         animalRepository.deleteById(id);
     }
 
