@@ -19,6 +19,7 @@ public class InteresseAdocao {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     private LocalDate dataInteresse;
     private String status;
     private String observacao;

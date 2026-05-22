@@ -3,17 +3,23 @@ package trabalhoindividual.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 import trabalhoindividual.domain.Animal;
+import trabalhoindividual.exception.ResourceNotFoundException;
 import trabalhoindividual.repository.AnimalRepository;
+import trabalhoindividual.repository.InteresseAdocaoRepository;
 
 @Service
 public class AnimalService {
 
     private final AnimalRepository animalRepository;
+    private final InteresseAdocaoRepository interesseAdocaoRepository;
 
-    public AnimalService(AnimalRepository animalRepository) {
+    public AnimalService(AnimalRepository animalRepository,
+            InteresseAdocaoRepository interesseAdocaoRepository) {
         this.animalRepository = animalRepository;
+        this.interesseAdocaoRepository = interesseAdocaoRepository;
     }
 
     public List<Animal> getAllAnimais() {
@@ -21,7 +27,7 @@ public class AnimalService {
     }
 
     public Animal getAnimalById(Long id) {
-        return animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
+        return animalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
     }
 
     public Animal createAnimal(Animal animal) {
@@ -40,9 +46,11 @@ public class AnimalService {
         return animalRepository.save(existingAnimal);
     }
 
+    @Transactional
     public void deleteAnimal(Long id) {
-        getAnimalById(id);
+        interesseAdocaoRepository.deleteByAnimalId(id);
+
         animalRepository.deleteById(id);
     }
-    
+
 }

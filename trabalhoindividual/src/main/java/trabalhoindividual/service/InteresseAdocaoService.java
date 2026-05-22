@@ -3,9 +3,7 @@ package trabalhoindividual.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import trabalhoindividual.domain.Animal;
 import trabalhoindividual.domain.InteresseAdocao;
@@ -57,12 +55,14 @@ public class InteresseAdocaoService {
         return toResponse(interesse);
     }
 
-    public List<InteresseAdocao> buscarPorPessoa(Long pessoaId) {
+    public List<InteresseAdocaoResponse> buscarPorPessoa(Long pessoaId) {
         if (!pessoaRepository.existsById(pessoaId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Pessoa não encontrada: " + pessoaId);
+            throw new ResourceNotFoundException("Pessoa não encontrada: " + pessoaId);
         }
-        return interesseAdocaoRepository.findByPessoaId(pessoaId);
+        return interesseAdocaoRepository.findByPessoaId(pessoaId)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     public List<InteresseAdocaoResponse> buscarPorAnimal(Long animalId) {

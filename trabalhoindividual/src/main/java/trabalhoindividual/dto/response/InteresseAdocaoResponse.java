@@ -3,7 +3,7 @@ package trabalhoindividual.dto.response;
 import java.time.LocalDate;
 
 public class InteresseAdocaoResponse {
-     private Long id;
+    private Long id;
     private LocalDate dataInteresse;
     private String status;
     private String observacao;

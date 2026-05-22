@@ -36,10 +36,10 @@
         }
 
         public PessoaResponse createPessoa(PessoaRequest request) {
-            if (pessoaRepository.findByCpf(request.getCpf()).isPresent()) {
+            if (pessoaRepository.findByCpf(request.getCpf(), null).isPresent()) {
                 throw new DuplicateEntryException("CPF já existe");
             }
-            if (pessoaRepository.findByEmail(request.getEmail()).isPresent()) {
+            if (pessoaRepository.findByEmail(request.getEmail(), null).isPresent()) {
                 throw new DuplicateEntryException("Email já existe");
             }
             Pessoa pessoa = new Pessoa();
