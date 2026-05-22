@@ -12,6 +12,7 @@
     import trabalhoindividual.dto.response.PessoaResponse;
     import trabalhoindividual.exception.DuplicateEntryException;
     import trabalhoindividual.exception.ResourceNotFoundException;
+    
     import trabalhoindividual.repository.PessoaRepository;
 
     @Service
@@ -35,10 +36,10 @@
         }
 
         public PessoaResponse createPessoa(PessoaRequest request) {
-            if (pessoaRepository.existsByCpf(request.getCpf())) {
+            if (pessoaRepository.findByCpf(request.getCpf()).isPresent()) {
                 throw new DuplicateEntryException("CPF já existe");
             }
-            if (pessoaRepository.existsByEmail(request.getEmail())) {
+            if (pessoaRepository.findByEmail(request.getEmail()).isPresent()) {
                 throw new DuplicateEntryException("Email já existe");
             }
             Pessoa pessoa = new Pessoa();

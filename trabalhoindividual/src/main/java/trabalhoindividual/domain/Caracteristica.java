@@ -25,6 +25,14 @@ public class Caracteristica {
     @JsonIgnoreProperties("caracteristicas")
     private List<Animal> animais;
 
+    public List<Animal> getAnimais() {
+        return animais;
+    }
+
+    public void setAnimais(List<Animal> animais) {
+        this.animais = animais;
+    }
+
     public Caracteristica() {
     }
 

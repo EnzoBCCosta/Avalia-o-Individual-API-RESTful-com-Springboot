@@ -32,8 +32,8 @@ public class InteresseAdocaoController {
     }
 
     @GetMapping("/pessoa/{pessoaId}")
-    public ResponseEntity<List<InteresseAdocaoResponse>> buscarPorPessoa(@PathVariable Long pessoaId) {
-        return ResponseEntity.ok(interesseAdocaoService.buscarPorPessoa(pessoaId));
+    public List<InteresseAdocaoResponse> buscarPorPessoa(@PathVariable Long pessoaId) {
+        return interesseAdocaoService.buscarPorPessoa(pessoaId);
     }
 
     @GetMapping("/animal/{animalId}")

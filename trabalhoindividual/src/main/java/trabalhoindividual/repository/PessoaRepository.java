@@ -4,11 +4,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import trabalhoindividual.domain.Pessoa;
+import java.util.Optional;
 
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, Long> {
 
-    boolean existsByCpf(String cpf);
-    boolean existsByEmail(String email);
+//verificar se existe cpf ou email igual para outra pessoa
+
+    Optional<Pessoa> findByCpfAndIdNot(String cpf, Long id);
+    Optional<Pessoa> findByEmailAndIdNot(String email, Long id);
 
 }

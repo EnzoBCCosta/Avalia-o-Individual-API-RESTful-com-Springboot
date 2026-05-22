@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import trabalhoindividual.domain.Caracteristica;
 import trabalhoindividual.dto.request.CaracteristicaRequest;
 import trabalhoindividual.dto.response.CaracteristicaResponse;
+import trabalhoindividual.exception.DuplicateEntryException;
 import trabalhoindividual.exception.ResourceNotFoundException;
 import trabalhoindividual.repository.CaracteristicaRepository;
 
@@ -61,9 +62,17 @@ public class CaracteristicaService {
         return toResponse(caracteristicaRepository.save(caracteristica));
     }
 
+
+    //verificar se a característica está vinculada a algum animal antes de deletar  
     public void deletar(Long id) {
-        caracteristicaRepository.findById(id)
+        Caracteristica caracteristica = caracteristicaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Característica não encontrada"));
+
+        if (caracteristica.getAnimais() != null && !caracteristica.getAnimais().isEmpty()) {
+            throw new DuplicateEntryException(
+                    "Característica está vinculada a um ou mais animais e não pode ser excluída.");
+        }
+
         caracteristicaRepository.deleteById(id);
     }
 }

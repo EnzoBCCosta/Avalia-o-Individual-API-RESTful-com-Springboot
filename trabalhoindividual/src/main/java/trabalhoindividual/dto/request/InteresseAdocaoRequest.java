@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
 
 public class InteresseAdocaoRequest {
 
     @NotNull(message = "Data de interesse é obrigatória")
-    @Past(message = "Data de interesse deve estar no passado")
+    @PastOrPresent(message = "Data de interesse deve estar no passado ou presente")
     private LocalDate dataInteresse;
 
     @NotBlank(message = "Status é obrigatório")

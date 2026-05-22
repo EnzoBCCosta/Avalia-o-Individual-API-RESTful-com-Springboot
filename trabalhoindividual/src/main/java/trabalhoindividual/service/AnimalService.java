@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import trabalhoindividual.domain.Animal;
 import trabalhoindividual.repository.AnimalRepository;
-import trabalhoindividual.exception.ResourceNotFoundException;
 
 @Service
 public class AnimalService {
@@ -22,7 +21,7 @@ public class AnimalService {
     }
 
     public Animal getAnimalById(Long id) {
-        return animalRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Animal não encontrado"));
+        return animalRepository.findById(id).orElseThrow(() -> new RuntimeException("Animal não encontrado"));
     }
 
     public Animal createAnimal(Animal animal) {
@@ -32,6 +31,10 @@ public class AnimalService {
     public Animal updateAnimal(Long id, Animal animal) {
         Animal existingAnimal = getAnimalById(id);
         existingAnimal.setNome(animal.getNome());
+        existingAnimal.setRaca(animal.getRaca());
+        existingAnimal.setSexo(animal.getSexo());
+        existingAnimal.setPorte(animal.getPorte());
+        existingAnimal.setStatus(animal.getStatus());
         existingAnimal.setEspecie(animal.getEspecie());
         existingAnimal.setIdade(animal.getIdade());
         return animalRepository.save(existingAnimal);
